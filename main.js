@@ -9,7 +9,8 @@ document.body.appendChild(renderer.domElement);
 
 // create a cube
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const texture = new THREE.TextureLoader().load("img.png")
+const material = new THREE.MeshBasicMaterial({ map: texture });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
