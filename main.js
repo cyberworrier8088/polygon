@@ -19,7 +19,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.render(scene, camera)
 
 // create a cube
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 const texture = new THREE.TextureLoader().load("img.png")
 const material = new THREE.MeshBasicMaterial({ map: texture });
 const cube = new THREE.Mesh(geometry, material);
@@ -46,7 +46,7 @@ loader.load(
     scene.add(boy);
 
     // resize
-    boy.scale.set(2, 2, 2);
+    boy.scale.set(1, 1, 1);
 
     // find the model's center
     const box = new THREE.Box3().setFromObject(boy);
