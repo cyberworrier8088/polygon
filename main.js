@@ -1,11 +1,22 @@
+import './style.css'
+
 import * as THREE from 'three';
+
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-const renderer = new THREE.WebGLRenderer();
+const loader = new GLTFLoader();
+
+let boy;
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.querySelector('#bg'),
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+
+renderer.render(scene, camera)
 
 // create a cube
 const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -24,6 +35,35 @@ scene.add(donut);
 // move the camera back so we can see the cube
 camera.position.z = 18;
 
+
+// adding my own model :)
+loader.load(
+  "/boy.glb",
+  function (gltf) {
+
+    boy = gltf.scene;
+
+    scene.add(boy);
+
+    // resize
+    boy.scale.set(2, 2, 2);
+
+    // find the model's center
+    const box = new THREE.Box3().setFromObject(boy);
+    const center = box.getCenter(new THREE.Vector3());
+
+    // move the model so its center is at the origin
+    boy.position.sub(center);
+
+  },
+
+  undefined,
+
+  function (error) {
+    console.error(error)
+  }
+);
+
 // create an animation loop to render the scene
 function animate() {
   requestAnimationFrame(animate);
@@ -34,6 +74,11 @@ function animate() {
 
   // render the scene
   renderer.render(scene, camera);
+
+  if (boy) {
+    boy.rotation.y += 0.01;
+  }
+
 }
 animate();
 
@@ -54,3 +99,14 @@ function add_star() {
 
 Array(900).fill().forEach(add_star);
 
+// adding camera
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top;
+
+  camera.position.z = t * -0.01;
+  camera.position.x = t * -0.0000;
+  camera.rotation.y = t * -0.0000;
+}
+
+document.body.onscroll = moveCamera;
+moveCamera();
